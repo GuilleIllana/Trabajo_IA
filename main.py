@@ -15,7 +15,10 @@ def loadWindowsList(hwnd, toplist):
 def loadTemplate(paths):
     template = []
     for path in paths:
-        template.append(cv2.cvtColor(cv2.imread(path), cv2.COLOR_BGR2GRAY))
+        image = cv2.imread(path)
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        (t, thresh) = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY)
+        template.append(thresh)
     return template
 
 
@@ -45,7 +48,7 @@ def windowCapture(name):
 
     # If Minesweeper can't be found, this code executes it
     except:
-        subprocess.Popen("D:\\Guillermo\\Documentos\\Universidad\\Inteligencia artificial\\Trabajo_IA\\Buscaminas.exe")
+        subprocess.Popen(r".\Buscaminas.exe")
         sleep(1)
 
         win32gui.EnumWindows(loadWindowsList, toplist)
@@ -60,6 +63,7 @@ def windowCapture(name):
 
 
 def boxCheck(image,template):
+
     # Checks the board searching for known figures
     for i in range(len(template)):
         if not(np.bitwise_xor(image, template[i]).any()):
@@ -83,12 +87,11 @@ def obtainMatrix(board, template):
             box = thresh[16 * i:16 * i + 16, 16 * j:16 * j + 16]  # Crop the image to extract the board
             state = boxCheck(box, template)
             board_mat[i][j] = state
-            """No detecta los bloques con bandera, bomba roja (explotada) ni el número 3"""
             # Debugging
-            #if i == 6 and j == 2:
-                #print(state)
-                #cv2.imshow("bloque", box)
-                #cv2.waitKey(0)
+            """if i == 0 and j == 0:
+                print(state)
+                cv2.imshow("bloque", box)
+                cv2.waitKey(0)"""
     return board_mat
 
 
@@ -107,7 +110,8 @@ def main():
     paths.append(r'.\data\block.png')
     paths.append(r'.\data\flag.png')
     paths.append(r'.\data\bomb.png')
-    paths.append(r'.\data\bomb_red.png')
+    paths.append(r'.\data\bomb_2.png')
+    paths.append(r'.\data\bomb_3.png')
 
     # Loading of all the templates
     template = loadTemplate(paths)
