@@ -31,6 +31,7 @@ def loadBoard(name):
 
 
 def windowCapture(name):
+    # This function return an image of the Minesweeper tab
     try:
         win32gui.EnumWindows(loadWindowsList, toplist)
         window = [(hwnd, title) for hwnd, title in winlist if name in title.lower()]
@@ -42,6 +43,7 @@ def windowCapture(name):
         img = ImageGrab.grab(bbox)
         return img
 
+    # If Minesweeper can't be found, this code executes it
     except:
         subprocess.Popen("D:\\Guillermo\\Documentos\\Universidad\\Inteligencia artificial\\Trabajo_IA\\Buscaminas.exe")
         sleep(1)
@@ -93,19 +95,19 @@ def obtainMatrix(board, template):
 def main():
     # Path of the template images
     paths = []
-    paths.append(r'.\0.png')
-    paths.append(r'.\1.png')
-    paths.append(r'.\2.png')
-    paths.append(r'.\3.png')
-    paths.append(r'.\4.png')
-    paths.append(r'.\5.png')
-    paths.append(r'.\6.png')
-    paths.append(r'.\7.png')
-    paths.append(r'.\8.png')
-    paths.append(r'.\block.png')
-    paths.append(r'.\flag.png')
-    paths.append(r'.\bomb.png')
-    paths.append(r'.\bomb_red.png')
+    paths.append(r'.\data\0.png')
+    paths.append(r'.\data\1.png')
+    paths.append(r'.\data\2.png')
+    paths.append(r'.\data\3.png')
+    paths.append(r'.\data\4.png')
+    paths.append(r'.\data\5.png')
+    paths.append(r'.\data\6.png')
+    paths.append(r'.\data\7.png')
+    paths.append(r'.\data\8.png')
+    paths.append(r'.\data\block.png')
+    paths.append(r'.\data\flag.png')
+    paths.append(r'.\data\bomb.png')
+    paths.append(r'.\data\bomb_red.png')
 
     # Loading of all the templates
     template = loadTemplate(paths)
