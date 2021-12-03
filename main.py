@@ -146,25 +146,25 @@ def main():
 
     # Loading of all the templates
     template = loadTemplate(paths)
+    while True:
+        # Loading of the Minesweeper board
+        board = loadBoard('buscaminas')
 
-    # Loading of the Minesweeper board
-    board = loadBoard('buscaminas')
+        # Obtaining the matrix which represents the state of the game
+        game_mat = obtainMatrix(board, template)
+        print(game_mat)
 
-    # Obtaining the matrix which represents the state of the game
-    game_mat = obtainMatrix(board, template)
-    print(game_mat)
+        # Coordinates of the box to click
+        x = int(input('Introduzca coordenada x del bloque a clickar:'))
+        y = int(input('Introduzca coordenada y del bloque a clickar:'))
 
-    # Obtaining the position of the Minesweeper window
-    x1, _, y1, _ = getPosition(getHwnd('buscaminas'), None)
+        # Obtaining the position of the Minesweeper window
+        x1, _, y1, _ = getPosition(getHwnd('buscaminas'), None)
 
-    # Coordinates of the box to click
-    x = 10
-    y = 10
-
-    # Moving the mouse to a certain box
-    """Creo que esto solo vale para la resolución de mi pantalla (1440p) y no sería preciso con pantallas FullHD,
-    pero no estoy seguro"""
-    mouse(x1+22+16*x, y1+108+16*y) # (x,y)
+        # Moving the mouse to a certain box
+        dx = 22 + 16 * x
+        dy = 108 + 16 * y
+        mouse(x1+dx, y1+dy, action=True) # (x,y)
 
 if __name__ == "__main__":
     main()
