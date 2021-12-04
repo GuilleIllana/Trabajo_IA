@@ -105,13 +105,22 @@ def getPosition(hwnd, extra):  # This function returns the position of the windo
     return x1, x2, y1, y2
 
 
-def mouse(x, y, action=False):  # This function controls the mouse (action is usually disabled for debugging)
+def mouse(x, y, side=0 , action=False):  # This function controls the mouse (action is usually disabled for debugging)
     win32api.mouse_event(win32con.MOUSEEVENTF_MOVE | win32con.MOUSEEVENTF_ABSOLUTE, int(x / SCREEN_WIDTH * 65535.0),
                          int(y / SCREEN_HEIGHT * 65535.0))
-    if action:
-        # Click of the mouse
-        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y,0,0)
-        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,x,y,0,0)
+    if action and side == 0:
+        # Click of the mouse (LEFT)
+        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0)
+        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0)
+        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0)
+        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0)
+
+    elif action and side == 1:
+        # Click of the mouse (RIGHT)
+        win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTDOWN, 0, 0)
+        win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP, 0, 0)
+        win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTDOWN, 0, 0)
+        win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP, 0, 0)
 
 
 def main():
@@ -164,7 +173,7 @@ def main():
     # Moving the mouse to a certain box
     dx = 22 + 16 * x
     dy = 108 + 16 * y
-    mouse(x1+dx, y1+dy, action=True) # (x,y)
+    mouse(x1+dx, y1+dy, side=1, action=True) # (x,y)
 
 if __name__ == "__main__":
     main()
