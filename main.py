@@ -1,10 +1,9 @@
 import WinCaptureFunctions as wcf
 
-
 def main():
 
     template = wcf.init_template()
-
+    
     while True:
         # Loading of the Minesweeper board
         board = wcf.loadBoard('buscaminas')
@@ -18,7 +17,6 @@ def main():
 
         # Clicking the board
         wcf.click_board(x, y)
-
 
 if __name__ == "__main__":
     main()
