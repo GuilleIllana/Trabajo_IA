@@ -173,7 +173,7 @@ def main():
     # Moving the mouse to a certain box
     dx = 22 + 16 * x
     dy = 108 + 16 * y
-    mouse(x1+dx, y1+dy, side=1, action=True) # (x,y)
+    mouse(x1+dx, y1+dy, side=0, action=True) # (x,y)
 
 if __name__ == "__main__":
     main()
