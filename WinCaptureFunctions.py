@@ -123,6 +123,7 @@ def mouse(x, y, action=False):  # This function controls the mouse (action is us
 
 
 
+
 def ask4cords():
     raw_input = input('Introduzca coordenada x e y del bloque a clickar:')
 
@@ -199,7 +200,7 @@ def recover_focus(name):
     # To get back window in focus
     try:
         hwnd = getHwnd(name)
-        win32gui.ShowWindow(hwnd, win32con.SWP_SHOWWINDOW)
+        win32gui.ShowWindow(hwnd, win32con.SW_NORMAL)
         win32gui.SetForegroundWindow(hwnd)
 
     except:
