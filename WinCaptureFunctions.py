@@ -91,7 +91,7 @@ def obtainMatrix(board, template):  # This function returns a matrix reflecting 
     for i in range(int(boardHeight / 16)):
         for j in range(int(boardWidth / 16)):
             box = thresh[16 * i:16 * i + 16, 16 * j:16 * j + 16]  # Crop the image to extract the board
-            state = boxCheck(box, template)
+            state = int(boxCheck(box, template))
             board_mat[i][j] = state
             # Debugging
             """if i == 0 and j == 0:
@@ -117,11 +117,11 @@ def mouse(x, y, action=False):  # This function controls the mouse (action is us
     win32api.mouse_event(win32con.MOUSEEVENTF_MOVE | win32con.MOUSEEVENTF_ABSOLUTE, int(x / SCREEN_WIDTH * 65535.0),
                          int(y / SCREEN_HEIGHT * 65535.0))
     if action:
-        # Click of the mouse
+        # Click of the mouse (must be double)
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x, y, 0, 0)
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)
-
-
+        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x, y, 0, 0)
+        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)
 
 
 def ask4cords():

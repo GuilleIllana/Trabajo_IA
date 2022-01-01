@@ -10,8 +10,13 @@ def main():
     while True:
         # Loading of the Minesweeper board
         board = wcf.loadBoard('buscaminas')
+<<<<<<< Updated upstream
         wcf.click_board(-1,-1)
 
+=======
+        wcf.click_board(-1, -1)
+        print(board)
+>>>>>>> Stashed changes
         # Obtaining the matrix which represents the state of the game
         game_mat = wcf.obtainMatrix(board, template)
         print(game_mat)
