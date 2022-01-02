@@ -7,13 +7,16 @@ import subprocess
 import ctypes
 import cv2
 import numpy as np
+import gc
 
-toplist, winlist = [], []
+
+handler = -1
 SCREEN_WIDTH, SCREEN_HEIGHT = ctypes.windll.user32.GetSystemMetrics(0), ctypes.windll.user32.GetSystemMetrics(1)
 
 
-def loadWindowsList(hwnd, toplist):
-    winlist.append((hwnd, win32gui.GetWindowText(hwnd)))
+def loadWindowsList(hwnd,toplist):
+    toplist.append((hwnd, win32gui.GetWindowText(hwnd)))
+
 
 
 def loadTemplate(paths):  # This function load and modify the template images
@@ -40,9 +43,16 @@ def loadBoard(name):  # This function capture and crop the Minesweeper screen
 
 
 def getHwnd(name):  # This function obtains the hwnd of the window with the provided name
+    global handler
+    toplist =[]
+    #if handler == -1:
     win32gui.EnumWindows(loadWindowsList, toplist)
-    window = [(hwnd, title) for hwnd, title in winlist if name in title.lower()]
-    return window[0][0]
+    #print(len(toplist))
+    window = [(hwnd, title) for hwnd, title in toplist if name in title.lower()]
+    handler = window[0][0]
+
+    gc.collect()
+    return handler
 
 
 def windowCapture(name):  # This function returns an image of the provided window name, in this case, Minesweeper
@@ -168,9 +178,11 @@ def click_board(x, y):
 
 def init_template():
     # Path of the template images
-    paths = []
+    paths = [r'.\data\0.png', r'.\data\1.png', r'.\data\2.png', r'.\data\3.png', r'.\data\4.png', r'.\data\5.png',
+             r'.\data\6.png', r'.\data\7.png', r'.\data\8.png', r'.\data\block.png', r'.\data\flag.png',
+             r'.\data\bomb.png', r'.\data\bomb_2.png', r'.\data\bomb_3.png']
 
-    # Number of bombs surrounding the box
+    '''# Number of bombs surrounding the box
     paths.append(r'.\data\0.png')  # 0
     paths.append(r'.\data\1.png')  # 1
     paths.append(r'.\data\2.png')  # 2
@@ -194,7 +206,7 @@ def init_template():
     paths.append(r'.\data\bomb_2.png')  # 12
 
     # Bomb which has exploded
-    paths.append(r'.\data\bomb_3.png')  # 13
+    paths.append(r'.\data\bomb_3.png')  # 13'''
 
     # Loading of all the templates
     template = loadTemplate(paths)

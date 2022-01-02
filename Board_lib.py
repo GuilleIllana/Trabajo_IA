@@ -34,13 +34,18 @@ class Board:
         # Obtaining the matrix that reflects the state of the game
         board_image = wcf.loadBoard('buscaminas')
         mat = wcf.obtainMatrix(board_image, self.template)
+        while np.isnan(mat).any():
+            mat = wcf.obtainMatrix(board_image, self.template)
 
         # update contains the coordinates which has changed in this iteration
-        update = np.argwhere(self.obtain_matrix() - mat)
+        '''update = np.argwhere(self.obtain_matrix() - mat)
         for idx in update:
             # This loop updates every cell state which has changed
             row, col = idx[0], idx[1]
-            self.cell[row][col].update_state(int(mat[row][col]))
+            self.cell[row][col].update_state(int(mat[row][col]))'''
+        for i in range(self.rows):
+            for j in range(self.cols):
+                self.cell[i][j].update_state(int(mat[i][j]))
 
         # Updating the dead state
         self.dead = self.check_dead()
@@ -97,7 +102,7 @@ class Board:
         for i in range(self.rows):
             print('[', end='\t')
             for j in range(self.cols):
-                if (self.cell[i][j].heuristic_value == -1):
+                if self.cell[i][j].heuristic_value == -1:
                     print(" --- ", end='\t')
                 else:
                     print("{:04.2F}".format(self.cell[i][j].heuristic_value), end='\t')

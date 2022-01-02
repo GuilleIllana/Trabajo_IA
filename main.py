@@ -2,6 +2,9 @@ import WinCaptureFunctions as wcf
 import DatasetGenerator as dsg
 import time
 import win32api
+import gc
+
+
 
 def main():
     # Loading of the Minesweeper board
@@ -37,6 +40,9 @@ def main():
         # if it looses restart the game
         if board.check_dead():
             print("LA PALMASTE")
+            del board
+            gc.collect()
+
             board = wcf.init_game()
             board.new_game()
             wcf.click_board(5, 5)
@@ -46,7 +52,7 @@ def main():
         state = win32api.GetKeyState(117)
         while state:
             state = win32api.GetKeyState(117)
-
+        gc.collect()
 if __name__ == "__main__":
     main()
 
