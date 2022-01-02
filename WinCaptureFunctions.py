@@ -131,8 +131,11 @@ def mouse(x, y, action=False):  # This function controls the mouse (action is us
 
 
 def ask4cords():
-    raw_input = input('Introduzca coordenadas (fila, columna) del bloque a clickar:')
 
+
+    raw_input = input('Introduzca coordenadas (fila, columna) del bloque a clickar:')
+    # Cleans input buffer
+    sys.stdout.flush()
     try:
         row, col = raw_input.split()
 
@@ -207,8 +210,8 @@ def init_game():
     mat = obtainMatrix(image, template)
     row, column = mat.shape
     board = Board(row, column)
-    board.new_game(template)
-    return board, template
+    board.new_game()
+    return board
 
 
 def recover_focus(name):

@@ -4,17 +4,16 @@ import DatasetGenerator as dsg
 
 def main():
     # Loading of the Minesweeper board
-    board, template = wcf.init_game()
+    board = wcf.init_game()
 
     # Test of printing a random board solved
     # print(dsg.generate_board(7,10,20))
-
+    board.update_board()
     while True:
-        board.update_board(template)
+
         #wcf.click_board(-1, -1)
         board.show_board()
 
-        print(board.check_dead())
 
         while True:
             try:
@@ -27,6 +26,12 @@ def main():
 
         # Clicking the board
         wcf.click_board(col, row)
+        board.update_board()
+
+        if board.check_dead():
+            input("Press Enter to continue...")
+            board = wcf.init_game()
+            board.new_game()
 
 if __name__ == "__main__":
     main()

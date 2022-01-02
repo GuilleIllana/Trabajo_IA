@@ -4,6 +4,7 @@ import WinCaptureFunctions as wcf
 from Cell_lib import Cell
 
 
+
 class Board:
     def __init__(self, rows, columns, solved=False, dead=False):
         self.rows = rows
@@ -14,25 +15,26 @@ class Board:
         row_list = [Cell(False, 9, 0) for i in range(rows)]
         self.cell = [copy.deepcopy(row_list) for j in range(columns)]
         # Obtaining the initial state of the board
-        template = wcf.init_template()
-        self.update_board(template)
+        self.template = wcf.init_template()
+        self.update_board()
 
-    def new_game(self, template):
+    def new_game(self):
         # Clicking the board to start new game
         wcf.click_board(int(self.cols/2), -2)
-        self.update_board(template)
+        self.update_board()
         self.solved = False
         self.dead = False
 
     def check_dead(self):
-        idx = np.argwhere(self.obtain_matrix() == 11)
+        # Change number to 13 cause a clicked bomb is 13 state
+        idx = np.argwhere(self.obtain_matrix() == 13)
         dead = True if idx.shape[0] != 0 else False
         return dead
 
-    def update_board(self, template):
+    def update_board(self):
         # Obtaining the matrix that reflects the state of the game
         board_image = wcf.loadBoard('buscaminas')
-        mat = wcf.obtainMatrix(board_image, template)
+        mat = wcf.obtainMatrix(board_image, self.template)
 
         # update contains the coordinates which has changed in this iteration
         update = np.argwhere(self.obtain_matrix() - mat)
