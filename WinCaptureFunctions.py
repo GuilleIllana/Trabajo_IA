@@ -1,5 +1,6 @@
 from PIL import ImageGrab
 from time import sleep
+from Board_lib import Board
 import win32gui, win32api, win32con
 import sys
 import subprocess
@@ -91,7 +92,7 @@ def obtainMatrix(board, template):  # This function returns a matrix reflecting 
     for i in range(int(boardHeight / 16)):
         for j in range(int(boardWidth / 16)):
             box = thresh[16 * i:16 * i + 16, 16 * j:16 * j + 16]  # Crop the image to extract the board
-            state = int(boxCheck(box, template))
+            state = boxCheck(box, template)
             board_mat[i][j] = state
             # Debugging
             """if i == 0 and j == 0:
@@ -110,6 +111,12 @@ def getPosition(hwnd, extra):  # This function returns the position of the windo
     return x1, x2, y1, y2
 
 
+def getBoard(template):  # This function returns the position of the window with the provided hwnd
+    # Obtaining the matrix that reflects the state of the game
+    image = loadBoard('buscaminas')
+    return obtainMatrix(image, template)
+
+
 def mouse(x, y, action=False):  # This function controls the mouse (action is usually disabled for debugging)
     print('mouse')
     recover_focus('buscaminas')
@@ -117,35 +124,31 @@ def mouse(x, y, action=False):  # This function controls the mouse (action is us
     win32api.mouse_event(win32con.MOUSEEVENTF_MOVE | win32con.MOUSEEVENTF_ABSOLUTE, int(x / SCREEN_WIDTH * 65535.0),
                          int(y / SCREEN_HEIGHT * 65535.0))
     if action:
-        # Click of the mouse (must be double)
+        # Click of the mouse
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x, y, 0, 0)
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)
-        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x, y, 0, 0)
-        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)
+
 
 
 def ask4cords():
-    raw_input = input('Introduzca coordenada x e y del bloque a clickar:')
+    raw_input = input('Introduzca coordenadas (fila, columna) del bloque a clickar:')
 
     try:
-        x, y = raw_input.split()
+        row, col = raw_input.split()
 
     except:
         try:
-            x, y = raw_input.split(',')
+            row, col = raw_input.split(',')
 
         except:
             try:
-                x, y = raw_input.split('.')
+                row, col = raw_input.split('.')
 
             except:
                 print("Te has esforzado, pero la has cagado")
                 return
 
-    x = int(x)
-    y = int(y)
-
-    return x, y
+    return int(row), int(col)
 
 
 def click_board(x, y):
@@ -195,6 +198,18 @@ def init_template():
     template = loadTemplate(paths)
 
     return template
+
+
+def init_game():
+    template = init_template()
+    # Obtaining the matrix that reflects the state of the game
+    image = loadBoard('buscaminas')
+    mat = obtainMatrix(image, template)
+    row, column = mat.shape
+    board = Board(row, column)
+    board.new_game(template)
+    return board, template
+
 
 def recover_focus(name):
     # To get back window in focus

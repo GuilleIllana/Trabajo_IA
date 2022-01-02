@@ -13,6 +13,21 @@ class Board:
         # If we don't use deep copy all the Cell objects are the same so they doesn't update properly
         row_list = [Cell(False, 9, 0) for i in range(rows)]
         self.cell = [copy.deepcopy(row_list) for j in range(columns)]
+        # Obtaining the initial state of the board
+        template = wcf.init_template()
+        self.update_board(template)
+
+    def new_game(self, template):
+        # Clicking the board to start new game
+        wcf.click_board(int(self.cols/2), -2)
+        self.update_board(template)
+        self.solved = False
+        self.dead = False
+
+    def check_dead(self):
+        idx = np.argwhere(self.obtain_matrix() == 11)
+        a = True if idx.shape[0] != 0 else False
+        return a
 
     def update_board(self, template):
         # Obtaining the matrix that reflects the state of the game
@@ -25,6 +40,9 @@ class Board:
             # This loop updates every cell state which has changed
             row, col = idx[0], idx[1]
             self.cell[row][col].update_state(int(mat[row][col]))
+
+        # Updating the dead state
+        self.dead = self.check_dead()
 
     def obtain_matrix(self):
         # This function returns a matrix representing the cells states
