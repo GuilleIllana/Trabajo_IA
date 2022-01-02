@@ -112,6 +112,7 @@ class Board:
                 else:
                     self.cell[i][j].discovered = False
 
+    # Search for the number of undiscovered neighbours
     def calc_undiscovered_neighbours(self):
         for i in range(self.rows):
             for j in range(self.cols):
@@ -158,31 +159,37 @@ class Board:
 
                     self.cell[i][j].undiscovered_neighbours = len(undiscovered)
 
+                # To exclude himself
                 if not self.cell[i][j].discovered:
                     self.cell[i][j].undiscovered_neighbours = self.cell[i][j].undiscovered_neighbours - 1
 
+    # Calc heuristic as the sum of probabilities of being a mine.
     def calc_heuristic(self):
         for i in range(self.rows):
             for j in range(self.cols):
                 if i != (self.rows - 1) and i != 0 and j != (self.cols - 1) and j != 0:
                     heuristic = [self.cell[i + vertical][j + horizontal].state/self.cell[i + vertical][j + horizontal].undiscovered_neighbours
                                  for horizontal in range(-1, 2) for vertical in range(-1, 2)
-                                 if self.cell[i + vertical][j + horizontal].undiscovered_neighbours != 0 and self.cell[i + vertical][j + horizontal].discovered]
+                                 if self.cell[i + vertical][j + horizontal].undiscovered_neighbours != 0
+                                 and self.cell[i + vertical][j + horizontal].discovered]
 
                     self.cell[i][j].heuristic_value = sum(heuristic)
                 elif i == 0:
                     if j == 0:
                         heuristic = [self.cell[i + vertical][j + horizontal].state/self.cell[i + vertical][j + horizontal].undiscovered_neighbours
                                      for horizontal in range(0, 2) for vertical in range(0, 2)
-                                     if self.cell[i + vertical][j + horizontal].undiscovered_neighbours != 0 and self.cell[i + vertical][j + horizontal].discovered]
+                                     if self.cell[i + vertical][j + horizontal].undiscovered_neighbours != 0
+                                     and self.cell[i + vertical][j + horizontal].discovered]
                     elif j == (self.cols - 1):
                         heuristic = [self.cell[i + vertical][j + horizontal].state/self.cell[i + vertical][j + horizontal].undiscovered_neighbours
                                      for horizontal in range(-1, 1) for vertical in range(0, 2)
-                                     if self.cell[i + vertical][j + horizontal].undiscovered_neighbours != 0 and self.cell[i + vertical][j + horizontal].discovered]
+                                     if self.cell[i + vertical][j + horizontal].undiscovered_neighbours != 0
+                                     and self.cell[i + vertical][j + horizontal].discovered]
                     else:
                         heuristic = [self.cell[i + vertical][j + horizontal].state/self.cell[i + vertical][j + horizontal].undiscovered_neighbours
                                      for horizontal in range(-1, 2) for vertical in range(0, 2)
-                                     if self.cell[i + vertical][j + horizontal].undiscovered_neighbours != 0 and self.cell[i + vertical][j + horizontal].discovered]
+                                     if self.cell[i + vertical][j + horizontal].undiscovered_neighbours != 0
+                                     and self.cell[i + vertical][j + horizontal].discovered]
 
                     self.cell[i][j].heuristic_value = sum(heuristic)
 
@@ -190,11 +197,13 @@ class Board:
                     if i == (self.rows - 1):
                         heuristic = [self.cell[i + vertical][j + horizontal].state/self.cell[i + vertical][j + horizontal].undiscovered_neighbours
                                      for horizontal in range(0, 2) for vertical in range(-1, 1)
-                                     if self.cell[i + vertical][j + horizontal].undiscovered_neighbours != 0 and self.cell[i + vertical][j + horizontal].discovered]
+                                     if self.cell[i + vertical][j + horizontal].undiscovered_neighbours != 0
+                                     and self.cell[i + vertical][j + horizontal].discovered]
                     else:
                         heuristic = [self.cell[i + vertical][j + horizontal].state/self.cell[i + vertical][j + horizontal].undiscovered_neighbours
                                      for horizontal in range(0, 2) for vertical in range(-1, 2)
-                                     if self.cell[i + vertical][j + horizontal].undiscovered_neighbours != 0 and self.cell[i + vertical][j + horizontal].discovered]
+                                     if self.cell[i + vertical][j + horizontal].undiscovered_neighbours != 0
+                                     and self.cell[i + vertical][j + horizontal].discovered]
 
                     self.cell[i][j].heuristic_value = sum(heuristic)
 
@@ -202,17 +211,20 @@ class Board:
                     if j == (self.cols - 1):
                         heuristic = [self.cell[i + vertical][j + horizontal].state/self.cell[i + vertical][j + horizontal].undiscovered_neighbours
                                      for horizontal in range(-1, 1) for vertical in range(-1, 1)
-                                     if self.cell[i + vertical][j + horizontal].undiscovered_neighbours != 0 and self.cell[i + vertical][j + horizontal].discovered]
+                                     if self.cell[i + vertical][j + horizontal].undiscovered_neighbours != 0
+                                     and self.cell[i + vertical][j + horizontal].discovered]
                     else:
                         heuristic = [self.cell[i + vertical][j + horizontal].state/self.cell[i + vertical][j + horizontal].undiscovered_neighbours
                                      for horizontal in range(-1, 2) for vertical in range(-1, 1)
-                                     if self.cell[i + vertical][j + horizontal].undiscovered_neighbours != 0 and self.cell[i + vertical][j + horizontal].discovered]
+                                     if self.cell[i + vertical][j + horizontal].undiscovered_neighbours != 0
+                                     and self.cell[i + vertical][j + horizontal].discovered]
 
                     self.cell[i][j].heuristic_value = sum(heuristic)
                 else:
                     heuristic = [self.cell[i + vertical][j + horizontal].state/self.cell[i + vertical][j + horizontal].undiscovered_neighbours
                                  for horizontal in range(-1, 1) for vertical in range(-1, 2)
-                                 if self.cell[i + vertical][j + horizontal].undiscovered_neighbours != 0 and self.cell[i + vertical][j + horizontal].discovered]
+                                 if self.cell[i + vertical][j + horizontal].undiscovered_neighbours != 0
+                                 and self.cell[i + vertical][j + horizontal].discovered]
                     self.cell[i][j].heuristic_value = sum(heuristic)
 
         for i in range(self.rows):
