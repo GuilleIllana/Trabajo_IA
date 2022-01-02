@@ -27,7 +27,7 @@ def loadTemplate(paths):  # This function load and modify the template images
 
 
 def loadBoard(name):  # This function capture and crop the Minesweeper screen
-    print('LoadBoard')
+    # print('LoadBoard')
     recover_focus('buscaminas')
 
     image = windowCapture(name)
@@ -118,7 +118,7 @@ def getBoard(template):  # This function returns the position of the window with
 
 
 def mouse(x, y, action=False):  # This function controls the mouse (action is usually disabled for debugging)
-    print('mouse')
+    # print('mouse')
     recover_focus('buscaminas')
 
     win32api.mouse_event(win32con.MOUSEEVENTF_MOVE | win32con.MOUSEEVENTF_ABSOLUTE, int(x / SCREEN_WIDTH * 65535.0),
@@ -155,7 +155,7 @@ def ask4cords():
 
 def click_board(x, y):
     # Obtaining the position of the Minesweeper window
-    print('click Board')
+    # print('click Board')
     recover_focus('buscaminas')
 
     x1, _, y1, _ = getPosition(getHwnd('buscaminas'), None)

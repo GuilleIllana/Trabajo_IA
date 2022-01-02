@@ -1,6 +1,7 @@
 import WinCaptureFunctions as wcf
 import DatasetGenerator as dsg
-
+import time
+import win32api
 
 def main():
     # Loading of the Minesweeper board
@@ -12,10 +13,10 @@ def main():
     while True:
 
         #wcf.click_board(-1, -1)
-        board.show_board()
+        # board.show_board()
 
 
-        while True:
+        '''while True:
             try:
                 # Coordinates of the box to click
                 row, col = wcf.ask4cords()
@@ -23,17 +24,28 @@ def main():
 
             except ValueError:
                 print('Invalid Input. Try again.')
-
+        '''
         # Clicking the board
-        wcf.click_board(col, row)
-        board.update_board()
-        board.show_undiscovered_neighbours()
-        board.show_heuristic()
 
+        board.update_board()
+        # board.show_undiscovered_neighbours()
+        # board.show_heuristic()
+        print(board.next_move())
+        i, j = board.next_move()
+        wcf.click_board(j, i)
+
+        # if it looses restart the game
         if board.check_dead():
-            _garbage = input("Press Enter to continue...")
+            print("LA PALMASTE")
             board = wcf.init_game()
             board.new_game()
+            wcf.click_board(5, 5)
+
+
+        # PARA PAUSAR PULSAR EL F6
+        state = win32api.GetKeyState(117)
+        while state:
+            state = win32api.GetKeyState(117)
 
 if __name__ == "__main__":
     main()
