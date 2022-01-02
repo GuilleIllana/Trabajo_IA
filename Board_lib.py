@@ -26,8 +26,8 @@ class Board:
 
     def check_dead(self):
         idx = np.argwhere(self.obtain_matrix() == 11)
-        a = True if idx.shape[0] != 0 else False
-        return a
+        dead = True if idx.shape[0] != 0 else False
+        return dead
 
     def update_board(self, template):
         # Obtaining the matrix that reflects the state of the game
