@@ -134,8 +134,7 @@ def ask4cords():
 
 
     raw_input = input('Introduzca coordenadas (fila, columna) del bloque a clickar:')
-    # Cleans input buffer
-    sys.stdout.flush()
+
     try:
         row, col = raw_input.split()
 
@@ -149,7 +148,7 @@ def ask4cords():
 
             except:
                 print("Te has esforzado, pero la has cagado")
-                return
+                return -1,-1
 
     return int(row), int(col)
 

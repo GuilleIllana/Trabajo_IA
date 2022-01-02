@@ -27,9 +27,11 @@ def main():
         # Clicking the board
         wcf.click_board(col, row)
         board.update_board()
+        board.show_undiscovered_neighbours()
+        board.show_heuristic()
 
         if board.check_dead():
-            input("Press Enter to continue...")
+            _garbage = input("Press Enter to continue...")
             board = wcf.init_game()
             board.new_game()
 
