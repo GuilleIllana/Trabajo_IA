@@ -11,8 +11,9 @@ class Board:
         self.solved = solved
         self.dead = dead
         # If we don't use deep copy all the Cell objects are the same so they doesn't update properly
-        row_list = [Cell(False, 9, 88) for i in range(rows)]
-        self.cell = [copy.deepcopy(row_list) for j in range(columns)]
+        #Order of creation mathers..
+        col_list = [Cell(False, 9, 88) for i in range(self.cols)]
+        self.cell = [copy.deepcopy(col_list) for j in range(self.rows)]
         # Obtaining the initial state of the board
         self.template = wcf.init_template()
         self.update_board()
@@ -43,6 +44,7 @@ class Board:
             # This loop updates every cell state which has changed
             row, col = idx[0], idx[1]
             self.cell[row][col].update_state(int(mat[row][col]))'''
+
         for i in range(self.rows):
             for j in range(self.cols):
                 self.cell[i][j].update_state(int(mat[i][j]))

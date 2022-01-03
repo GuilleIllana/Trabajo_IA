@@ -45,7 +45,7 @@ def main():
 
             board = wcf.init_game()
             board.new_game()
-            wcf.click_board(5, 5)
+            #wcf.click_board(5, 5)
 
 
         # PARA PAUSAR PULSAR EL F6

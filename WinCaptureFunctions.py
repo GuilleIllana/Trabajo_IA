@@ -30,7 +30,7 @@ def loadTemplate(paths):  # This function load and modify the template images
 
 
 def loadBoard(name):  # This function capture and crop the Minesweeper screen
-    # print('LoadBoard')
+    #print('LoadBoard')
     recover_focus('buscaminas')
 
     image = windowCapture(name)
@@ -88,7 +88,7 @@ def boxCheck(image, template):  # This function checks the board searching for k
 
 
 def obtainMatrix(board, template):  # This function returns a matrix reflecting the state of the game
-
+    #print("Obtain matrix")
     # CV treatment of the image
     gray = cv2.cvtColor(board, cv2.COLOR_BGR2GRAY)
     (t, thresh) = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY)
@@ -98,7 +98,8 @@ def obtainMatrix(board, template):  # This function returns a matrix reflecting 
     # cv2.waitKey()
 
     (boardHeight, boardWidth) = board.shape[:2]
-    board_mat = np.zeros((int(boardHeight / 16), int(boardWidth / 16)))
+
+    board_mat = np.zeros((int(boardHeight/ 16), int(boardWidth / 16)))
     for i in range(int(boardHeight / 16)):
         for j in range(int(boardWidth / 16)):
             box = thresh[16 * i:16 * i + 16, 16 * j:16 * j + 16]  # Crop the image to extract the board
@@ -218,7 +219,9 @@ def init_game():
     template = init_template()
     # Obtaining the matrix that reflects the state of the game
     image = loadBoard('buscaminas')
+    print(image.shape)
     mat = obtainMatrix(image, template)
+    print(mat.shape)
     row, column = mat.shape
     board = Board(row, column)
     board.new_game()
