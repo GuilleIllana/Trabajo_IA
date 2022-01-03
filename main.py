@@ -12,11 +12,11 @@ def main():
 
     # Test of printing a random board solved
     # print(dsg.generate_board(7,10,20))
-    board.update_board()
+
     while True:
 
         #wcf.click_board(-1, -1)
-        # board.show_board()
+        board.show_board()
 
 
         '''while True:
@@ -32,7 +32,7 @@ def main():
 
         board.update_board()
         # board.show_undiscovered_neighbours()
-        # board.show_heuristic()
+        board.show_heuristic()
         print(board.next_move())
         i, j = board.next_move()
         wcf.click_board(j, i)
@@ -40,12 +40,14 @@ def main():
         # if it looses restart the game
         if board.check_dead():
             print("LA PALMASTE")
-            del board
-            gc.collect()
 
             board = wcf.init_game()
             board.new_game()
             #wcf.click_board(5, 5)
+
+        if board.check_solved():
+            print("LA GANASTE")
+            break
 
 
         # PARA PAUSAR PULSAR EL F6
