@@ -7,13 +7,16 @@ import subprocess
 import ctypes
 import cv2
 import numpy as np
+import gc
 
-toplist, winlist = [], []
+
+handler = -1
 SCREEN_WIDTH, SCREEN_HEIGHT = ctypes.windll.user32.GetSystemMetrics(0), ctypes.windll.user32.GetSystemMetrics(1)
 
 
-def loadWindowsList(hwnd, toplist):
-    winlist.append((hwnd, win32gui.GetWindowText(hwnd)))
+def loadWindowsList(hwnd,toplist):
+    toplist.append((hwnd, win32gui.GetWindowText(hwnd)))
+
 
 
 def loadTemplate(paths):  # This function load and modify the template images
@@ -27,7 +30,7 @@ def loadTemplate(paths):  # This function load and modify the template images
 
 
 def loadBoard(name):  # This function capture and crop the Minesweeper screen
-    print('LoadBoard')
+    #print('LoadBoard')
     recover_focus('buscaminas')
 
     image = windowCapture(name)
@@ -40,9 +43,16 @@ def loadBoard(name):  # This function capture and crop the Minesweeper screen
 
 
 def getHwnd(name):  # This function obtains the hwnd of the window with the provided name
+    global handler
+    toplist =[]
+    #if handler == -1:
     win32gui.EnumWindows(loadWindowsList, toplist)
-    window = [(hwnd, title) for hwnd, title in winlist if name in title.lower()]
-    return window[0][0]
+    #print(len(toplist))
+    window = [(hwnd, title) for hwnd, title in toplist if name in title.lower()]
+    handler = window[0][0]
+
+    gc.collect()
+    return handler
 
 
 def windowCapture(name):  # This function returns an image of the provided window name, in this case, Minesweeper
@@ -78,7 +88,7 @@ def boxCheck(image, template):  # This function checks the board searching for k
 
 
 def obtainMatrix(board, template):  # This function returns a matrix reflecting the state of the game
-
+    #print("Obtain matrix")
     # CV treatment of the image
     gray = cv2.cvtColor(board, cv2.COLOR_BGR2GRAY)
     (t, thresh) = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY)
@@ -88,7 +98,8 @@ def obtainMatrix(board, template):  # This function returns a matrix reflecting 
     # cv2.waitKey()
 
     (boardHeight, boardWidth) = board.shape[:2]
-    board_mat = np.zeros((int(boardHeight / 16), int(boardWidth / 16)))
+
+    board_mat = np.zeros((int(boardHeight/ 16), int(boardWidth / 16)))
     for i in range(int(boardHeight / 16)):
         for j in range(int(boardWidth / 16)):
             box = thresh[16 * i:16 * i + 16, 16 * j:16 * j + 16]  # Crop the image to extract the board
@@ -118,7 +129,7 @@ def getBoard(template):  # This function returns the position of the window with
 
 
 def mouse(x, y, action=False):  # This function controls the mouse (action is usually disabled for debugging)
-    print('mouse')
+    # print('mouse')
     recover_focus('buscaminas')
 
     win32api.mouse_event(win32con.MOUSEEVENTF_MOVE | win32con.MOUSEEVENTF_ABSOLUTE, int(x / SCREEN_WIDTH * 65535.0),
@@ -131,6 +142,8 @@ def mouse(x, y, action=False):  # This function controls the mouse (action is us
 
 
 def ask4cords():
+
+
     raw_input = input('Introduzca coordenadas (fila, columna) del bloque a clickar:')
 
     try:
@@ -146,14 +159,14 @@ def ask4cords():
 
             except:
                 print("Te has esforzado, pero la has cagado")
-                return
+                return -1,-1
 
     return int(row), int(col)
 
 
 def click_board(x, y):
     # Obtaining the position of the Minesweeper window
-    print('click Board')
+    # print('click Board')
     recover_focus('buscaminas')
 
     x1, _, y1, _ = getPosition(getHwnd('buscaminas'), None)
@@ -166,9 +179,11 @@ def click_board(x, y):
 
 def init_template():
     # Path of the template images
-    paths = []
+    paths = [r'.\data\0.png', r'.\data\1.png', r'.\data\2.png', r'.\data\3.png', r'.\data\4.png', r'.\data\5.png',
+             r'.\data\6.png', r'.\data\7.png', r'.\data\8.png', r'.\data\block.png', r'.\data\flag.png',
+             r'.\data\bomb.png', r'.\data\bomb_2.png', r'.\data\bomb_3.png']
 
-    # Number of bombs surrounding the box
+    '''# Number of bombs surrounding the box
     paths.append(r'.\data\0.png')  # 0
     paths.append(r'.\data\1.png')  # 1
     paths.append(r'.\data\2.png')  # 2
@@ -192,7 +207,7 @@ def init_template():
     paths.append(r'.\data\bomb_2.png')  # 12
 
     # Bomb which has exploded
-    paths.append(r'.\data\bomb_3.png')  # 13
+    paths.append(r'.\data\bomb_3.png')  # 13'''
 
     # Loading of all the templates
     template = loadTemplate(paths)
@@ -204,11 +219,13 @@ def init_game():
     template = init_template()
     # Obtaining the matrix that reflects the state of the game
     image = loadBoard('buscaminas')
+    print(image.shape)
     mat = obtainMatrix(image, template)
+    print(mat.shape)
     row, column = mat.shape
     board = Board(row, column)
-    board.new_game(template)
-    return board, template
+    board.new_game()
+    return board
 
 
 def recover_focus(name):
