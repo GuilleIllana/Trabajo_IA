@@ -139,7 +139,18 @@ def mouse(x, y, action=False):  # This function controls the mouse (action is us
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x, y, 0, 0)
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)
 
+def mouse_right(x, y, action=False):  # This function controls the mouse (action is usually disabled for debugging)
+    # print('mouse')
+    recover_focus('buscaminas')
 
+    win32api.mouse_event(win32con.MOUSEEVENTF_MOVE | win32con.MOUSEEVENTF_ABSOLUTE, int(x / SCREEN_WIDTH * 65535.0),
+                         int(y / SCREEN_HEIGHT * 65535.0))
+    #sleep(0.1)
+    if action:
+        # Click of the mouse
+        win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTDOWN, x, y, 0, 0)
+        #sleep(0.1)
+        win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP, x, y, 0, 0)
 
 def ask4cords():
 
@@ -175,6 +186,18 @@ def click_board(x, y):
     dx = 22 + 16 * x
     dy = 108 + 16 * y
     mouse(x1 + dx, y1 + dy, action=True)  # (x,y)
+
+def click_board_right(x, y):
+    # Obtaining the position of the Minesweeper window
+    # print('click Board')
+    recover_focus('buscaminas')
+
+    x1, _, y1, _ = getPosition(getHwnd('buscaminas'), None)
+
+    # Moving the mouse to a certain box
+    dx = 22 + 16 * x
+    dy = 108 + 16 * y
+    mouse_right(x1 + dx, y1 + dy, action=True)  # (x,y)
 
 
 def init_template():

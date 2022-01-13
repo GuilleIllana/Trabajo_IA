@@ -3,6 +3,10 @@ import DatasetGenerator as dsg
 import win32api
 import gc
 import time
+import MS_eq_solver as mses
+import numpy as np
+
+import test
 
 
 def main():
@@ -15,7 +19,7 @@ def main():
     while True:
 
         #wcf.click_board(-1, -1)
-        board.show_board()
+        #board.show_board()
 
 
         '''while True:
@@ -31,10 +35,41 @@ def main():
 
         board.update_board()
         # board.show_undiscovered_neighbours()
-        board.show_heuristic()
-        print(board.next_move())
-        i, j = board.next_move()
-        wcf.click_board(j, i)
+        #board.show_heuristic()
+        # print(board.next_move())
+        mat = np.array(mses.expanded_board(board))
+
+        print('mat')
+        move = 0
+        i = 0
+        j = 0
+        print(board.rows)
+        print(board.cols)
+        while i < board.rows and move == 0:
+            j = 0
+            while j < board.cols and move == 0:
+                print(i, j)
+                if mat[i + 1][j + 1] == 0 or mat[i + 1][j + 1] == 9 or mat[i + 1][j + 1] == 10 or mat[i + 1][
+                    j + 1] == 15:
+                    j = j + 1
+                    continue
+                r, c, m = mses.solve_system_1(mat, i, j)
+                if m == 0:
+                    wcf.click_board(c - 1, r - 1)
+                    #time.sleep(0.2)
+                    print('no mina', r - 1, c - 1)
+                    move = 1
+                elif m == 1:
+                    wcf.click_board_right(c - 1, r - 1)
+                    #time.sleep(0.2)
+                    print('mina', r - 1, c - 1)
+                    move = 1
+                j = j + 1
+            i = i + 1
+
+        if move == 0:
+            i, j = board.next_move()
+            wcf.click_board(j, i)
 
         # if it looses restart the game
         if board.check_dead():
