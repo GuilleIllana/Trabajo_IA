@@ -242,9 +242,9 @@ def init_game():
     template = init_template()
     # Obtaining the matrix that reflects the state of the game
     image = loadBoard('buscaminas')
-    print(image.shape)
+    #print(image.shape)
     mat = obtainMatrix(image, template)
-    print(mat.shape)
+    #print(mat.shape)
     row, column = mat.shape
     board = Board(row, column)
     board.new_game()
@@ -259,4 +259,5 @@ def recover_focus(name):
         win32gui.SetForegroundWindow(hwnd)
 
     except:
-        print("Are you sure close window is?")
+        #print("Are you sure close window is?")
+        print("")
