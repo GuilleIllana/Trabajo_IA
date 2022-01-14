@@ -3,7 +3,8 @@ import numpy as np
 
 # Minesweeper equation system solver via model checking
 
-def expanded_board(Board): #para ponerle un "borde" al tablero (se amplían las dimensiones). Es cutre lo sé
+def expanded_board(Board):
+    # para ponerle un "borde" al tablero (se amplían las dimensiones). Es cutre, lo sé :)
     m = []
     r = []
     for j in range(Board.cols + 2):
@@ -53,7 +54,8 @@ def check_value(ec_sys, value):
 
 # --- 1 ECUACIÓN ---
 
-def get_coords_1(n, row, col):# transforma una solución en las coordenadas del tablero (1 ecuación)
+def get_coords_1(n, row, col):
+    # transforma una solución en las coordenadas del tablero (1 ecuación)
     k = 0
     for i in range(3):
         for j in range(3):
@@ -64,25 +66,26 @@ def get_coords_1(n, row, col):# transforma una solución en las coordenadas del 
             k += 1
     return -1
 
-def solve_system_1(eb, row, col): #resuelve el sistema de ecuaciones (en realidad, solo una ecuación) de una casilla
+def solve_system_1(eb, row, col):
+    # resuelve el sistema de ecuaciones (en realidad, solo una ecuación) de una casilla
     n1 = eb[row + 1][col + 1] #  (término independiente de la ecuación 1) # valor de la casilla central (término independiente de la ecuación)
     candidate_solutions = [] # soluciones candidatas
-    inc = [] #incógnitas (vector que representa las posiciones de las casillas colindadntes sin descubrir)
+    inc = [] # incógnitas (vector que representa las posiciones de las casillas colindadntes sin descubrir)
 
     k = 0
     for i in range(3):
         for j in range(3):
             if i == 1 and j == 1:
                 continue
-            elif eb[row+i][col+j] == 9: #unknown, not discovered
+            elif eb[row+i][col+j] == 9: # unknown, not discovered
                 inc.append(k) # se añade a la lista de incógnitas
                 candidate_solutions.append(False) # el vector de soluciones candidatas empieza inicializado en ceros
-            elif eb[row+i][col+j] == 10: #flag
+            elif eb[row+i][col+j] == 10: # flag
                 n1 = n1 - 1 # se le resta 1 al valor de la suma
             k += 1
 
     if len(inc) == 0:
-        return -1, -1, -1  #no hay ninguna incógnita alrededor
+        return -1, -1, -1  # no hay ninguna incógnita alrededor
 
     valid_solutions = []
     # todas las posibilidades
@@ -91,25 +94,26 @@ def solve_system_1(eb, row, col): #resuelve el sistema de ecuaciones (en realida
         if sum(candidate_solutions) == n1:
             valid_solutions.append(candidate_solutions)
 
-    if len(valid_solutions) == 0: #no hay un solo valor del sistema que cumpla las ecuaciones 
+    if len(valid_solutions) == 0: # no hay un solo valor del sistema que cumpla las ecuaciones
         # (lo cual no sé muy bien por qué ocurre)
         return -1, -1, -1
 
     v = check_value(valid_solutions, 0)  # 0 = no mina -> pulsar
     if len(v) != 0:
         rn, cn = get_coords_1(inc[v[0]], row, col)
-        return rn, cn, 0 #row, column, no mine
+        return rn, cn, 0 # row, column, not mine
 
-    v = check_value(valid_solutions, 1) #1 = mina
+    v = check_value(valid_solutions, 1) # 1 = mina -> banderita
     if len(v) != 0:
         rm, cm = get_coords_1(inc[v[0]], row, col)
-        return rm, cm, 1 #row, column, mine
+        return rm, cm, 1 # row, column, mine
     else:
         return -1, -1, -1
 
 # --- 2 ECUACIONES VERTICAL ---
 
-def get_coords_2v(n, row, col):# transforma una solución en las coordenadas del tablero (2 ecuaciones, vertical)
+def get_coords_2v(n, row, col):
+    # transforma una solución en las coordenadas del tablero (2 ecuaciones, vertical)
     k = 0
     for i in range(4):
         for j in range(3):
@@ -121,11 +125,11 @@ def get_coords_2v(n, row, col):# transforma una solución en las coordenadas del
     return -1
 
 def solve_system_2v(eb, row, col):
-
+    # resuelve el sistema de ecuaciones de dos casillas consecutivas en vertical
     n1 = eb[row + 1][col + 1] # (término independiente de la ecuación 1)
     n2 = eb[row + 2][col + 1] # (término independiente de la ecuación 2)
     candidate_solutions = [] # soluciones candidatas
-    inc = [] #incógnitas (vector que representa las posiciones de las casillas colindadntes sin descubrir)
+    inc = [] # incógnitas (vector que representa las posiciones de las casillas colindadntes sin descubrir)
 
     # ec. 1 -> filas (i) 0 a 2
     # ec. 2 -> filas (i) 1 a 3
@@ -138,7 +142,7 @@ def solve_system_2v(eb, row, col):
                 start2 = len(inc) # marca que indica desde qué parte del vector se corresponde con la ecuación 2
             elif i == 3 and j == 0:
                 end1 = len(inc) # marca que indica hasta qué parte del vector se corresponde con la ecuación 1
-            if eb[row+i][col+j] == 9: #unknown
+            if eb[row+i][col+j] == 9: # unknown
                 inc.append(k) # se añade a la lista de incógnitas
                 candidate_solutions.append(False)
             elif eb[row+i][col+j] == 10: #flag
@@ -149,7 +153,7 @@ def solve_system_2v(eb, row, col):
             k += 1
 
     if len(inc) == 0:
-        return -1, -1, -1 #no hay ninguna incógnita alrededor
+        return -1, -1, -1 # no hay ninguna incógnita alrededor
 
     valid_solutions = []
     # todas las posibilidades
@@ -160,23 +164,23 @@ def solve_system_2v(eb, row, col):
 
     if len(valid_solutions) == 0:
         return -1, -1, -1
-    v = check_value(valid_solutions, 1) #1 = mina -> POSIBLE CAMBIO DE ORDEN MAAAAN
-    if len(v) != 0:
-        rm, cm = get_coords_2v(inc[v[0]], row, col)
-        #eb[rm][cm] = 10
-        return rm, cm, 1
 
-    v = check_value(valid_solutions, 0)  # 0 = no mina -> pulsar
+    v = check_value(valid_solutions, 0) # 0 = no mina -> pulsar
     if len(v) != 0:
         rn, cn = get_coords_2v(inc[v[0]], row, col)
-        #eb[rn][cn] = 15 ## prueba
         return rn, cn, 0
+
+    v = check_value(valid_solutions, 1) # 1 = mina -> banderita
+    if len(v) != 0:
+        rm, cm = get_coords_2v(inc[v[0]], row, col)
+        return rm, cm, 1
     else:
         return -1, -1, -1
 
 # --- 2 ECUACIONES HORIZONTAL ---
 
-def get_coords_2h(n, row, col):# transforma una solución en las coordenadas del tablero (2 ecuaciones, vertical)
+def get_coords_2h(n, row, col):
+    # transforma una solución en las coordenadas del tablero (2 ecuaciones, horizontal)
     k = 0
     for j in range(4):
         for i in range(3):
@@ -188,11 +192,11 @@ def get_coords_2h(n, row, col):# transforma una solución en las coordenadas del
     return -1
 
 def solve_system_2h(eb, row, col):
-
+    # resuelve el sistema de ecuaciones de dos casillas consecutivas en horizontal
     n1 = eb[row + 1][col + 1] # (término independiente de la ecuación 1)
-    n2 = eb[row + 2][col + 1] # (término independiente de la ecuación 2)
+    n2 = eb[row + 1][col + 2] # (término independiente de la ecuación 2)
     candidate_solutions = [] # soluciones candidatas
-    inc = [] #incógnitas (vector que representa las posiciones de las casillas colindadntes sin descubrir)
+    inc = [] # incógnitas (vector que representa las posiciones de las casillas colindadntes sin descubrir)
 
     # ec. 1 -> columnas (j) 0 a 2
     # ec. 2 -> columnas (j) 1 a 3
@@ -205,18 +209,18 @@ def solve_system_2h(eb, row, col):
                 start2 = len(inc) # marca que indica desde qué parte del vector se corresponde con la ecuación 2
             elif j == 3 and i == 0:
                 end1 = len(inc) # marca que indica hasta qué parte del vector se corresponde con la ecuación 1
-            if eb[row+i][col+j] == 9: #unknown
+            if eb[row+i][col+j] == 9: # unknown
                 inc.append(k) # se añade a la lista de incógnitas
                 candidate_solutions.append(False)
-            elif eb[row+i][col+j] == 10: #flag
+            elif eb[row+i][col+j] == 10: # flag
                 if j <= 2:
                     n1 = n1 - 1 # se le resta 1 al valor de la suma (ec 1)
                 if j >= 1:
                     n2 = n2 - 1 # se le resta 1 al valor de la suma (ec 2)
             k += 1
 
-    if len(inc) == 0:
-        return -1, -1, -1 #no hay ninguna incógnita alrededor
+    if len(inc) == 0: # no hay ninguna incógnita alrededor
+        return -1, -1, -1
 
     valid_solutions = []
     # todas las posibilidades
@@ -227,17 +231,16 @@ def solve_system_2h(eb, row, col):
 
     if len(valid_solutions) == 0:
         return -1, -1, -1
-    v = check_value(valid_solutions, 1) #1 = mina -> POSIBLE CAMBIO DE ORDEN MAAAAN
-    if len(v) != 0:
-        rm, cm = get_coords_2h(inc[v[0]], row, col)
-        #eb[rm][cm] = 10
-        return rm, cm, 1
 
-    v = check_value(valid_solutions, 0)  # 0 = no mina -> pulsar
+    v = check_value(valid_solutions, 0) # 0 = no mina -> pulsar
     if len(v) != 0:
         rn, cn = get_coords_2h(inc[v[0]], row, col)
-        #eb[rn][cn] = 15 ## prueba
         return rn, cn, 0
+
+    v = check_value(valid_solutions, 1) # 1 = mina -> banderita
+    if len(v) != 0:
+        rm, cm = get_coords_2h(inc[v[0]], row, col)
+        return rm, cm, 1
     else:
         return -1, -1, -1
 

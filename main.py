@@ -17,7 +17,7 @@ def main():
     # print(dsg.generate_board(7,10,20))
     start_time = time.time()
 
-    n_partidas = 10
+    n_partidas = 100
     partidas = 0
     resultados = []
     while partidas < n_partidas:
@@ -31,39 +31,35 @@ def main():
 
         # if it loses restart the game
         if board.check_dead():
-            print("Perdiste!")
-            print("--- Perdiste en %s segundos ---" % (time.time() - start_time))
-            print("\n")
-            board.show_board()
+            #print("Perdiste!")
+            #print("--- Perdiste en %s segundos ---" % (time.time() - start_time))
+            #print("\n")
+            #board.show_board()
 
             resultados.append(0)
             partidas = partidas + 1
+            print('partida ', partidas, ' de ', n_partidas, ', victorias: ', resultados.count(1))
+            if partidas == n_partidas:
+                break
             board = wcf.init_game()
             board.new_game()
             start_time = time.time()
 
         if board.check_solved():
-            print("Has ganado")
-            print("--- GANASTE en %s segundos ---" % (time.time() - start_time))
-            print("\n")
+            #print("Has ganado")
+            #print("--- GANASTE en %s segundos ---" % (time.time() - start_time))
+            #print("\n")
 
-            board.show_board()
-
+            #board.show_board()
             resultados.append(1)
             partidas = partidas + 1
+            print('partida ', partidas, ' de ', n_partidas, ', victorias: ', resultados.count(1))
+            if partidas == n_partidas:
+                break
             board = wcf.init_game()
             board.new_game()
             start_time = time.time()
 
-        '''while True:
-            try:
-                # Coordinates of the box to click
-                row, col = wcf.ask4cords()
-                break
-
-            except ValueError:
-                print('Invalid Input. Try again.')
-        '''
         # Clicking the board
 
         board.update_board()
@@ -87,11 +83,11 @@ def main():
                 if m == 0:
                     wcf.click_board(c - 1, r - 1)
                     move = 1
-                    print('1')
+                    #print('1')
                 elif m == 1:
                     wcf.click_board_right(c - 1, r - 1)
                     move = 1
-                    print('1')
+                    #print('1')
                 j += 1
             i += 1
 
@@ -101,21 +97,21 @@ def main():
         # sistema de 2 ecuaciones (vertical)
         i = 0
         j = 0
-        while i < board.rows and move == 0:
+        while i < board.rows - 1 and move == 0:
             j = 0
-            while j < board.cols - 1 and move == 0:
-                if mat[i + 1][j + 1] == 0 or mat[i + 1][j + 1] == 9 or mat[i + 1][j + 1] == 10 or mat[i + 2][j + 1] == 0 or mat[i + 2][j + 1] == 9 or mat[i + 1][j + 1] == 10:
+            while j < board.cols and move == 0:
+                if mat[i + 1][j + 1] == 0 or mat[i + 1][j + 1] == 9 or mat[i + 1][j + 1] == 10 or mat[i + 2][j + 1] == 0 or mat[i + 2][j + 1] == 9 or mat[i + 2][j + 1] == 10:
                     j = j + 1
                     continue
                 r, c, m = mses.solve_system_2v(mat, i, j)
                 if m == 0:
                     wcf.click_board(c - 1, r - 1)
                     move = 1
-                    print('2v')
+                    #print('2v')
                 elif m == 1:
                     wcf.click_board_right(c - 1, r - 1)
                     move = 1
-                    print('2v')
+                    #print('2v')
                 j += 1
             i += 1
 
@@ -125,9 +121,9 @@ def main():
         # sistema de 2 ecuaciones (horizontal)
         i = 0
         j = 0
-        while i < board.rows - 1 and move == 0:
+        while i < board.rows and move == 0:
             j = 0
-            while j < board.cols and move == 0:
+            while j < board.cols - 1 and move == 0:
                 if mat[i + 1][j + 1] == 0 or mat[i + 1][j + 1] == 9 or mat[i + 1][j + 1] == 10 or mat[i + 1][j + 2] == 0 or mat[i + 1][j + 2] == 9 or mat[i + 1][j + 2] == 10:
                     j = j + 1
                     continue
@@ -135,11 +131,11 @@ def main():
                 if m == 0:
                     wcf.click_board(c - 1, r - 1)
                     move = 1
-                    print('2h')
+                    #print('2h')
                 elif m == 1:
                     wcf.click_board_right(c - 1, r - 1)
                     move = 1
-                    print('2h')
+                    #print('2h')
                 j += 1
             i += 1
 
@@ -149,7 +145,7 @@ def main():
         # si no ha encontrado ningún sistema resoluble, usa el heurístico
         i, j = board.next_move()
         wcf.click_board(j, i)
-        print('h')
+        #print('*')
 
 
 

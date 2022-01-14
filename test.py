@@ -17,24 +17,20 @@ import numpy as np
 #mat = np.array(mses.expanded_board(board))
 #
 #
-#for i in range(board.rows):
-#    for j in range(board.cols):
-#        if mat[i+1][j+1] == 0 or mat[i+1][j+1] == 9 or mat[i+1][j+1] == 10 or mat[i+1][j+1] == 15:
-#            continue
-#        r,c,m = mses.solve_system_1(mat, i, j)
-#        if m == 0:
-#            wcf.click_board(r-1, c-1)
-#            print('no mina', r-1, c-1)
-#        elif m == 1:
-#            wcf.click_board_right(r - 1, c - 1)
-#            print('mina', r-1, c-1)
+
+#mat = [[20, 20, 20, 20, 20, 20, 20],
+#       [20,  1,  1,  1, 10,  9, 20],
+#       [20,  9,  9,  9,  9,  9, 20],
+#       [20,  9,  9,  9,  9,  9, 20],
+#       [20,  9,  9,  9,  9,  9, 20],
+#       [20,  9,  9,  9,  1,  1, 20],
+#       [20, 20, 20, 20, 20, 20, 20]]
+##for i in range(4):
+##       print(np.array(mat)[i][2:5])
 #
-#        print(i, j)
-#
-#board.update_board()
-##board.show_board()
-#
-#print(mat)
+#mses.solve_system_2v(mat,0,2)
+
+
 
 
 
