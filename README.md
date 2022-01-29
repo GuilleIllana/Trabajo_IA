@@ -1,11 +1,15 @@
 # Trabajo_IA
 
 Trabajo de la asignatura de Inteligencia Artificial en el Máster Universitario en Automática y Robótica de la ETSII - Universidad Politécnica de Madrid
+
 Los componentes somos:
 
 Guillermo Illana Gisbert - 21059
+
 Pablo García Peris – 21202
+
 Alberto López Rodríguez – 21170
+
 Javier Díaz Mena - 12100
 
 En este repositorio viene todo el código necesario para ejecutar el bot resolvedor de Buscaminas, incluyendo el ejecutable del juego "Buscaminas.exe".
