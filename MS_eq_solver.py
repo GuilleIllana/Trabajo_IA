@@ -1,5 +1,6 @@
 import Board_lib
 import numpy as np
+import WinCaptureFunctions as wcf
 
 # Minesweeper equation system solver via model checking
 
@@ -243,4 +244,82 @@ def solve_system_2h(eb, row, col):
         return rm, cm, 1
     else:
         return -1, -1, -1
+
+
+def get_move_model_checking(board):
+    mat = np.array(expanded_board(board))
+
+    move = 0
+
+    # sistema de 1 ecuación
+    i = 0
+    j = 0
+    while i < board.rows and move == 0:
+        j = 0
+        while j < board.cols and move == 0:
+            if mat[i + 1][j + 1] == 0 or mat[i + 1][j + 1] == 9 or mat[i + 1][j + 1] == 10:
+                j = j + 1
+                continue
+            r, c, m = solve_system_1(mat, i, j)
+            if m == 0:
+                wcf.click_board(c - 1, r - 1)
+                move = 1
+                #print('1')
+            elif m == 1:
+                wcf.click_board_right(c - 1, r - 1)
+                move = 1
+                #print('1')
+            j += 1
+        i += 1
+
+    if move == 1:
+        return True, i, j
+
+    # sistema de 2 ecuaciones (vertical)
+    i = 0
+    j = 0
+    while i < board.rows - 1 and move == 0:
+        j = 0
+        while j < board.cols and move == 0:
+            if mat[i + 1][j + 1] == 0 or mat[i + 1][j + 1] == 9 or mat[i + 1][j + 1] == 10 or mat[i + 2][j + 1] == 0 or mat[i + 2][j + 1] == 9 or mat[i + 2][j + 1] == 10:
+                j = j + 1
+                continue
+            r, c, m = solve_system_2v(mat, i, j)
+            if m == 0:
+                wcf.click_board(c - 1, r - 1)
+                move = 1
+                #print('2v')
+            elif m == 1:
+                wcf.click_board_right(c - 1, r - 1)
+                move = 1
+                #print('2v')
+            j += 1
+        i += 1
+
+    if move == 1:
+        return True, i, j
+
+    # sistema de 2 ecuaciones (horizontal)
+    i = 0
+    j = 0
+    while i < board.rows and move == 0:
+        j = 0
+        while j < board.cols - 1 and move == 0:
+            if mat[i + 1][j + 1] == 0 or mat[i + 1][j + 1] == 9 or mat[i + 1][j + 1] == 10 or mat[i + 1][j + 2] == 0 or mat[i + 1][j + 2] == 9 or mat[i + 1][j + 2] == 10:
+                j = j + 1
+                continue
+            r, c, m = solve_system_2h(mat, i, j)
+            if m == 0:
+                wcf.click_board(c - 1, r - 1)
+                move = 1
+                #print('2h')
+            elif m == 1:
+                wcf.click_board_right(c - 1, r - 1)
+                move = 1
+                #print('2h')
+            j += 1
+        i += 1
+
+        return move, i, j
+
 
